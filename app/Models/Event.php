@@ -22,4 +22,19 @@ class Event extends Model
     { 
         return $this->morphMany(Note::class, 'noteable'); 
     }
+
+    public function scopeUpcoming($query)
+    {
+        return $query->where('starts_at', '>=', now());
+    }
+
+    public function scopeSoonest($query)
+    {
+        return $query->orderBy('starts_at');
+    }
+
+    public function scopeAtVenue($query, int $venueId)
+    {
+        return $query->where('venue_id', $venueId);
+    }
 }   

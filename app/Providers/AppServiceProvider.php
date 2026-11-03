@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,5 +25,7 @@ class AppServiceProvider extends ServiceProvider
             'event' => \App\Models\Event::class,
             'venue' => \App\Models\Venue::class,
         ]);
+
+         Model::preventLazyLoading(! app()->isProduction());
     }
 }
