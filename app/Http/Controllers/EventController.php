@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
+
     // Naive version: lazy loading (causes the N+1 problem)
     public function naive()
     {
@@ -16,6 +17,24 @@ class EventController extends Controller
         $events = Event::upcoming()->soonest()->limit(50)->get();
 
         return $this->renderWithQueryCount('events.naive', ['events' => $events]);
+    }
+
+    public function search(Request $request)
+    {
+        $term = trim((string) $request->query('q', ''));
+
+        $query = Event::query()->with('venue');
+
+        if ($term !== '') {
+            $query->whereFullText('description', $term);
+        }
+
+        $query->limit(50);
+        $sql = $query->toSql();
+
+        $events = $term !== '' ? $query->get() : collect();
+
+        return view('events.search', compact('events', 'term', 'sql'));
     }
 
     // Fixed version: eager loading + withCount
