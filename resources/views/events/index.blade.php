@@ -5,6 +5,12 @@
 <body>
 <h1>Events: fixed version (eager loading + withCount)</h1>
 <p><strong>Total queries: __QUERY_COUNT__</strong></p>
+   @if (request('dress_code'))
+       <p>
+           Filter: details dress_code = <strong>{{ request('dress_code') }}</strong>
+           ({{ request('mode') === 'contains' ? 'whereJsonContains' : 'arrow form' }})
+       </p>
+   @endif
 <table border="1" cellpadding="6">
     <tr><th>Title</th><th>Venue</th><th>Participants</th></tr>
     @foreach ($events as $event)

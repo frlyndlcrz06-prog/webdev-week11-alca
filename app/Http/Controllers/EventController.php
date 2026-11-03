@@ -26,6 +26,11 @@ class EventController extends Controller
         $events = Event::upcoming()
             ->soonest()
             ->when($request->venue, fn ($q, $venueId) => $q->atVenue((int) $venueId))
+            ->when($request->query('dress_code'), function ($q, $dress) use ($request) {
+                return $request->query('mode') === 'contains'
+                    ? $q->whereJsonContains('details', ['dress_code' => $dress])   // containment form
+                    : $q->where('details->dress_code', $dress);                    // arrow form
+            })
             ->with('venue')
             ->withCount('participants')
             ->limit(50)
