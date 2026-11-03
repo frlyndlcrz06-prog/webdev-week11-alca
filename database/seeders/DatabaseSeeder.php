@@ -43,7 +43,9 @@ class DatabaseSeeder extends Seeder
             $rows[] = [
                 'venue_id'    => $venueIds[$i % count($venueIds)],
                 'title'       => "Event $i",
-                'starts_at'   => $now->copy()->addDays($i % 365)->addHours($i % 24),
+                   'starts_at' => $i <= 100
+                        ? $now->copy()->addDays(7)->addMinutes($i)
+                        : $now->copy()->addDays(14 + $i % 365)->addHours($i % 24),
                 'description' => $description,
                 'details'     => json_encode([
                     'dress_code' => $isRare ? 'costume' : $dressCodes[$i % count($dressCodes)],
